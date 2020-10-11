@@ -1,0 +1,9 @@
+/src/
+/dist/stories/
+/.storybook/
+/storybook-static/
+/.gitignore
+/.prettierrc
+/tsconfig.json
+/webpack.config.js
+/yarn.lock

@@ -1,6 +1,6 @@
 {
   "name": "react-use-history-reducer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "dist/main.js",
   "types": "dist/src/ts/index.d.ts",
@@ -30,10 +30,7 @@
     "@storybook/preset-create-react-app": "^3.1.4",
     "@storybook/react": "^6.0.26",
     "@storybook/storybook-deployer": "^2.8.7",
-    "@types/classnames": "^2.2.10",
-    "@types/react-portal": "^4.0.2",
     "babel-loader": "^8.1.0",
-    "bulma": "^0.9.1",
     "css-loader": "^4.3.0",
     "react-scripts": "^3.4.3",
     "ts-loader": "^8.0.4",

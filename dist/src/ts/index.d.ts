@@ -1,2 +1,2 @@
-import { useHistoryReducer } from './useHistoryReducer';
+import useHistoryReducer from './useHistoryReducer';
 export default useHistoryReducer;

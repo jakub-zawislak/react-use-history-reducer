@@ -66,6 +66,25 @@ const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
 |----------------|---------|---------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | omitUnmodified | boolean | true    | If it's true, it doesn't push a new state to the history, if it's the same as a previous one. It compares states using the `JSON.stringify` |
 
+## The `history` object
+
+`history` is a third element in list returned by `useHistoryReducer`.
+
+```jsx
+const [state, dispatch, history] = useHistoryReducer(reducer, initialState)
+```
+
+It has these properties:
+
+| Property | Type     | Description           |
+|----------|----------|-----------------------|
+| undo     | function | Call it to undo       |
+| redo     | function | Call it to redo       |
+| canUndo  | boolean  | Check if you can undo |
+| canRedo  | boolean  | Check if you can redo |
+| past     | state[]  | Past states           |
+| future   | state[]  | Future states         |
+
 ## Development
 
 ```

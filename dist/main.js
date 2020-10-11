@@ -163,13 +163,16 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
         canRedo: future.length > 0,
         undo: () => dispatch({ type: UNDO }),
         redo: () => dispatch({ type: REDO }),
+        past,
+        future,
     };
     return [present, dispatch, history];
 };
+/* harmony default export */ var ts_useHistoryReducer = (useHistoryReducer);
 
 // CONCATENATED MODULE: ./src/ts/index.ts
 
-/* harmony default export */ var ts = __webpack_exports__["default"] = (useHistoryReducer);
+/* harmony default export */ var ts = __webpack_exports__["default"] = (ts_useHistoryReducer);
 
 
 /***/ })

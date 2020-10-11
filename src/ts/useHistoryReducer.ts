@@ -27,6 +27,8 @@ type UseHistoryReducer = (
     canRedo: boolean
     undo: () => void
     redo: () => void
+    past: State[]
+    future: State[]
   }
 ]
 
@@ -37,7 +39,7 @@ type Options = {
 const compareStates = (stateA: State, stateB: State) =>
   JSON.stringify(stateA) === JSON.stringify(stateB)
 
-export const useHistoryReducer: UseHistoryReducer = (
+const useHistoryReducer: UseHistoryReducer = (
   reducer,
   initialState,
   opts = {}
@@ -104,7 +106,11 @@ export const useHistoryReducer: UseHistoryReducer = (
     canRedo: future.length > 0,
     undo: () => dispatch({ type: UNDO }),
     redo: () => dispatch({ type: REDO }),
+    past,
+    future,
   }
 
   return [present, dispatch, history]
 }
+
+export default useHistoryReducer

@@ -10,9 +10,11 @@ declare type UseHistoryReducer = (reducer: Reducer, initialState: State, opts: P
     canRedo: boolean;
     undo: () => void;
     redo: () => void;
+    past: State[];
+    future: State[];
 }];
 declare type Options = {
     omitUnmodified?: boolean;
 };
-export declare const useHistoryReducer: UseHistoryReducer;
-export {};
+declare const useHistoryReducer: UseHistoryReducer;
+export default useHistoryReducer;
