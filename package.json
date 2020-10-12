@@ -1,6 +1,6 @@
 {
   "name": "react-use-history-reducer",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "",
   "main": "dist/main.js",
   "types": "dist/src/ts/index.d.ts",
@@ -18,7 +18,7 @@
   "author": "Jakub Zawiślak",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jakub-zawislak/another-use-history-reducer.git"
+    "url": "https://github.com/jakub-zawislak/react-use-history-reducer.git"
   },
   "license": "MIT",
   "dependencies": {
