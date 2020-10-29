@@ -11,11 +11,16 @@ type State = {
 
 type Action = ActionIncremenet | ActionDecrement
 
-type ActionIncremenet = {
+type ActionBase = {
+  type: string
+  historyCheckpoint?: boolean
+}
+
+type ActionIncremenet = ActionBase & {
   type: 'increment'
 }
 
-type ActionDecrement = {
+type ActionDecrement = ActionBase & {
   type: 'decrement'
 }
 
@@ -42,6 +47,53 @@ export const Basic = () => {
       <div>
         <button onClick={() => dispatch({ type: 'decrement' })}>--</button>{' '}
         <button onClick={() => dispatch({ type: 'increment' })}>++</button>
+      </div>
+      <br />
+      <div>
+        <button disabled={!history.canUndo} onClick={history.undo}>
+          undo
+        </button>{' '}
+        <button disabled={!history.canRedo} onClick={history.redo}>
+          redo
+        </button>
+      </div>
+    </div>
+  )
+}
+
+export const Breakpoints = () => {
+  const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
+    omitUnmodified: true,
+    useCheckpoints: true,
+  })
+
+  console.log(state.count, state.count % 3 == 0)
+
+  return (
+    <div>
+      <div>Count: {state.count}</div>
+      <br />
+      <div>
+        <button
+          onClick={() =>
+            dispatch({
+              type: 'decrement',
+              historyCheckpoint: state.count % 3 == 0,
+            })
+          }
+        >
+          --
+        </button>{' '}
+        <button
+          onClick={() =>
+            dispatch({
+              type: 'increment',
+              historyCheckpoint: state.count % 3 == 0,
+            })
+          }
+        >
+          ++
+        </button>
       </div>
       <br />
       <div>

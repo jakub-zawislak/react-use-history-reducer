@@ -6,12 +6,14 @@ const REDO = 'USE_HISTORY_REDUCER_REDO'
 type Reducer<T> = (state: T, action: Action) => T
 type Action = {
   [key: string]: any
+  historyCheckpoint?: boolean
   type: string
 }
 type HistoryState<State> = {
   past: State[]
   present: State
   future: State[]
+  isCheckpoint: boolean
 }
 
 export type HistoryReducerControl<T> = {
@@ -31,6 +33,7 @@ type UseHistoryReducer = <T>(
 
 type Options = {
   omitUnmodified?: boolean
+  useCheckpoints?: boolean
 }
 
 const compareStates = (stateA: any, stateB: any) =>
@@ -41,8 +44,9 @@ const useHistoryReducer: UseHistoryReducer = (
   initialState,
   opts = {}
 ) => {
-  const { omitUnmodified }: Options = {
+  const { omitUnmodified, useCheckpoints }: Options = {
     omitUnmodified: true,
+    useCheckpoints: false,
     ...opts,
   }
 
@@ -50,9 +54,12 @@ const useHistoryReducer: UseHistoryReducer = (
     past: [],
     present: initialState,
     future: [],
+    isCheckpoint: true,
   }
 
   const historyReducer = (state, action: Action) => {
+    const isNewCheckpoint = useCheckpoints ? !!action.historyCheckpoint : true
+
     if (action.type === UNDO) {
       const [newPresent, ...past] = state.past
 
@@ -63,7 +70,10 @@ const useHistoryReducer: UseHistoryReducer = (
       return {
         past,
         present: newPresent,
-        future: [state.present, ...state.future],
+        future: state.isCheckpoint
+          ? [state.present, ...state.future]
+          : state.future,
+        isCheckpoint: true,
       }
     }
 
@@ -75,9 +85,10 @@ const useHistoryReducer: UseHistoryReducer = (
       }
 
       return {
-        past: [state.present, ...state.past],
+        past: state.isCheckpoint ? [state.present, ...state.past] : state.past,
         present: newPresent,
         future,
+        isCheckpoint: true,
       }
     }
 
@@ -87,10 +98,20 @@ const useHistoryReducer: UseHistoryReducer = (
       return state
     }
 
+    if (useCheckpoints && !state.isCheckpoint) {
+      return {
+        past: state.past,
+        present: newPresent,
+        future: state.future,
+        isCheckpoint: isNewCheckpoint,
+      }
+    }
+
     return {
       past: [state.present, ...state.past],
       present: newPresent,
       future: [],
+      isCheckpoint: isNewCheckpoint,
     }
   }
 

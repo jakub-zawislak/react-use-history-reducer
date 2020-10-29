@@ -58,13 +58,15 @@ You can pass options in a third argument
 
 ```jsx
 const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
-  omitUnmodified: false,
+  omitUnmodified: true,
+  useCheckpoints: false,
 })
 ```
 
 | Option         | Type    | Default | Description                                                                                                                                 |
 |----------------|---------|---------|---------------------------------------------------------------------------------------------------------------------------------------------|
 | omitUnmodified | boolean | true    | If it's true, it doesn't push a new state to the history, if it's the same as a previous one. It compares states using the `JSON.stringify` |
+| useCheckpoints | boolean | false   | Enables checkpoints support. With this option you have to pass `historyCheckpoint: true` to the action to add state to history              |
 
 ## The `history` object
 
