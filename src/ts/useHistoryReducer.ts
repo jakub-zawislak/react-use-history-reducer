@@ -8,28 +8,26 @@ type Action = {
   [key: string]: any
   type: string
 }
-export type HistoryState<State> = {
+type HistoryState<State> = {
   past: State[]
   present: State
   future: State[]
+}
+
+export type HistoryReducerControl<T> = {
+  canUndo: boolean
+  canRedo: boolean
+  undo: () => void
+  redo: () => void
+  past: T[]
+  future: T[]
 }
 
 type UseHistoryReducer = <T>(
   reducer: Reducer<T>,
   initialState: T,
   opts?: Partial<Options>
-) => [
-  T,
-  React.Dispatch<Action>,
-  {
-    canUndo: boolean
-    canRedo: boolean
-    undo: () => void
-    redo: () => void
-    past: T[]
-    future: T[]
-  }
-]
+) => [T, React.Dispatch<Action>, HistoryReducerControl<T>]
 
 type Options = {
   omitUnmodified?: boolean
