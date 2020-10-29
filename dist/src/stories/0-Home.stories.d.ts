@@ -4,3 +4,4 @@ declare const _default: {
 };
 export default _default;
 export declare const Basic: () => JSX.Element;
+export declare const Breakpoints: () => JSX.Element;

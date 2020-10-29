@@ -2,6 +2,7 @@
 declare type Reducer<T> = (state: T, action: Action) => T;
 declare type Action = {
     [key: string]: any;
+    historyCheckpoint?: boolean;
     type: string;
 };
 export declare type HistoryReducerControl<T> = {
@@ -15,6 +16,7 @@ export declare type HistoryReducerControl<T> = {
 declare type UseHistoryReducer = <T>(reducer: Reducer<T>, initialState: T, opts?: Partial<Options>) => [T, React.Dispatch<Action>, HistoryReducerControl<T>];
 declare type Options = {
     omitUnmodified?: boolean;
+    useCheckpoints?: boolean;
 };
 declare const useHistoryReducer: UseHistoryReducer;
 export default useHistoryReducer;

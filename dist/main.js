@@ -117,13 +117,15 @@ const UNDO = 'USE_HISTORY_REDUCER_UNDO';
 const REDO = 'USE_HISTORY_REDUCER_REDO';
 const compareStates = (stateA, stateB) => JSON.stringify(stateA) === JSON.stringify(stateB);
 const useHistoryReducer = (reducer, initialState, opts = {}) => {
-    const { omitUnmodified } = Object.assign({ omitUnmodified: true }, opts);
+    const { omitUnmodified, useCheckpoints } = Object.assign({ omitUnmodified: true, useCheckpoints: false }, opts);
     const historyState = {
         past: [],
         present: initialState,
         future: [],
+        isCheckpoint: true,
     };
     const historyReducer = (state, action) => {
+        const isNewCheckpoint = useCheckpoints ? !!action.historyCheckpoint : true;
         if (action.type === UNDO) {
             const [newPresent, ...past] = state.past;
             if (!newPresent) {
@@ -132,7 +134,10 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
             return {
                 past,
                 present: newPresent,
-                future: [state.present, ...state.future],
+                future: state.isCheckpoint
+                    ? [state.present, ...state.future]
+                    : state.future,
+                isCheckpoint: true,
             };
         }
         if (action.type === REDO) {
@@ -141,19 +146,29 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
                 return state;
             }
             return {
-                past: [state.present, ...state.past],
+                past: state.isCheckpoint ? [state.present, ...state.past] : state.past,
                 present: newPresent,
                 future,
+                isCheckpoint: true,
             };
         }
         const newPresent = reducer(state.present, action);
         if (omitUnmodified && compareStates(newPresent, state.present)) {
             return state;
         }
+        if (useCheckpoints && !state.isCheckpoint) {
+            return {
+                past: state.past,
+                present: newPresent,
+                future: state.future,
+                isCheckpoint: isNewCheckpoint,
+            };
+        }
         return {
             past: [state.present, ...state.past],
             present: newPresent,
             future: [],
+            isCheckpoint: isNewCheckpoint,
         };
     };
     const [state, dispatch] = Object(external_react_["useReducer"])(historyReducer, historyState);
