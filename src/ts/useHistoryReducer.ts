@@ -8,7 +8,7 @@ type Action = {
   [key: string]: any
   type: string
 }
-type HistoryState<State> = {
+export type HistoryState<State> = {
   past: State[]
   present: State
   future: State[]

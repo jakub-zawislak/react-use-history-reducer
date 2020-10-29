@@ -31,13 +31,9 @@ const reducer = (state: State, action: Action) => {
 const initialState = { count: 0 }
 
 export const Basic = () => {
-  const [state, dispatch, history] = useHistoryReducer<State>(
-    reducer,
-    initialState,
-    {
-      omitUnmodified: true,
-    }
-  )
+  const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
+    omitUnmodified: true,
+  })
 
   return (
     <div>

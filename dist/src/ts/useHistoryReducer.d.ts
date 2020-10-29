@@ -4,6 +4,11 @@ declare type Action = {
     [key: string]: any;
     type: string;
 };
+export declare type HistoryState<State> = {
+    past: State[];
+    present: State;
+    future: State[];
+};
 declare type UseHistoryReducer = <T>(reducer: Reducer<T>, initialState: T, opts?: Partial<Options>) => [T, React.Dispatch<Action>, {
     canUndo: boolean;
     canRedo: boolean;
