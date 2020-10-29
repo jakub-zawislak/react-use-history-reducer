@@ -1,17 +1,16 @@
 /// <reference types="react" />
-declare type State = any;
-declare type Reducer = (state: State, action: Action) => State;
+declare type Reducer<T> = (state: T, action: Action) => T;
 declare type Action = {
     [key: string]: any;
     type: string;
 };
-declare type UseHistoryReducer = (reducer: Reducer, initialState: State, opts: Partial<Options>) => [State, React.Dispatch<Action>, {
+declare type UseHistoryReducer = <T>(reducer: Reducer<T>, initialState: T, opts?: Partial<Options>) => [T, React.Dispatch<Action>, {
     canUndo: boolean;
     canRedo: boolean;
     undo: () => void;
     redo: () => void;
-    past: State[];
-    future: State[];
+    past: T[];
+    future: T[];
 }];
 declare type Options = {
     omitUnmodified?: boolean;
