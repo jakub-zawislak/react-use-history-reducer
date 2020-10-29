@@ -3,32 +3,31 @@ import { useReducer } from 'react'
 const UNDO = 'USE_HISTORY_REDUCER_UNDO'
 const REDO = 'USE_HISTORY_REDUCER_REDO'
 
-type State = any
-type Reducer = (state: State, action: Action) => State
+type Reducer<T> = (state: T, action: Action) => T
 type Action = {
   [key: string]: any
   type: string
 }
-type HistoryState = {
+type HistoryState<State> = {
   past: State[]
   present: State
   future: State[]
 }
 
-type UseHistoryReducer = (
-  reducer: Reducer,
-  initialState: State,
-  opts: Partial<Options>
+type UseHistoryReducer = <T>(
+  reducer: Reducer<T>,
+  initialState: T,
+  opts?: Partial<Options>
 ) => [
-  State,
+  T,
   React.Dispatch<Action>,
   {
     canUndo: boolean
     canRedo: boolean
     undo: () => void
     redo: () => void
-    past: State[]
-    future: State[]
+    past: T[]
+    future: T[]
   }
 ]
 
@@ -36,7 +35,7 @@ type Options = {
   omitUnmodified?: boolean
 }
 
-const compareStates = (stateA: State, stateB: State) =>
+const compareStates = (stateA: any, stateB: any) =>
   JSON.stringify(stateA) === JSON.stringify(stateB)
 
 const useHistoryReducer: UseHistoryReducer = (
@@ -49,13 +48,13 @@ const useHistoryReducer: UseHistoryReducer = (
     ...opts,
   }
 
-  const historyState: HistoryState = {
+  const historyState: HistoryState<any> = {
     past: [],
     present: initialState,
     future: [],
   }
 
-  const historyReducer = (state: State, action: Action) => {
+  const historyReducer = (state, action: Action) => {
     if (action.type === UNDO) {
       const [newPresent, ...past] = state.past
 
@@ -99,7 +98,7 @@ const useHistoryReducer: UseHistoryReducer = (
 
   const [state, dispatch] = useReducer(historyReducer, historyState)
 
-  const { past, future, present } = state as HistoryState
+  const { past, future, present } = state as HistoryState<any>
 
   const history = {
     canUndo: past.length > 0,

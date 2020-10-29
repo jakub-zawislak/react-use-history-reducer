@@ -1,11 +1,25 @@
-import React, { useReducer } from 'react'
+import React from 'react'
 import useHistoryReducer from '../ts'
 
 export default {
   title: 'Home',
 }
 
-const reducer = (state, action) => {
+type State = {
+  count: number
+}
+
+type Action = ActionIncremenet | ActionDecrement
+
+type ActionIncremenet = {
+  type: 'increment'
+}
+
+type ActionDecrement = {
+  type: 'decrement'
+}
+
+const reducer = (state: State, action: Action) => {
   switch (action.type) {
     case 'increment':
       return { count: state.count + 1 }
@@ -17,9 +31,13 @@ const reducer = (state, action) => {
 const initialState = { count: 0 }
 
 export const Basic = () => {
-  const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
-    omitUnmodified: true,
-  })
+  const [state, dispatch, history] = useHistoryReducer<State>(
+    reducer,
+    initialState,
+    {
+      omitUnmodified: true,
+    }
+  )
 
   return (
     <div>
