@@ -17,6 +17,7 @@ declare type UseHistoryReducer = <T>(reducer: Reducer<T>, initialState: T, opts?
 declare type Options = {
     omitUnmodified?: boolean;
     useCheckpoints?: boolean;
+    max?: number | undefined;
 };
 declare const useHistoryReducer: UseHistoryReducer;
 export default useHistoryReducer;

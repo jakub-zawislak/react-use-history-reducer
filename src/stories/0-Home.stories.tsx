@@ -61,6 +61,34 @@ export const Basic = () => {
   )
 }
 
+export const MaxLength = () => {
+  const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
+    omitUnmodified: true,
+    max: 3,
+  })
+
+  return (
+    <div>
+      <div>The max length is 3</div>
+      <div>Count: {state.count}</div>
+      <br />
+      <div>
+        <button onClick={() => dispatch({ type: 'decrement' })}>--</button>{' '}
+        <button onClick={() => dispatch({ type: 'increment' })}>++</button>
+      </div>
+      <br />
+      <div>
+        <button disabled={!history.canUndo} onClick={history.undo}>
+          undo
+        </button>{' '}
+        <button disabled={!history.canRedo} onClick={history.redo}>
+          redo
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export const Breakpoints = () => {
   const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
     omitUnmodified: true,
@@ -71,6 +99,7 @@ export const Breakpoints = () => {
 
   return (
     <div>
+      <div>Breakpoints are on every third number ()</div>
       <div>Count: {state.count}</div>
       <br />
       <div>
@@ -78,7 +107,7 @@ export const Breakpoints = () => {
           onClick={() =>
             dispatch({
               type: 'decrement',
-              historyCheckpoint: state.count % 3 == 0,
+              historyCheckpoint: state.count % 3 == 2,
             })
           }
         >
@@ -88,7 +117,7 @@ export const Breakpoints = () => {
           onClick={() =>
             dispatch({
               type: 'increment',
-              historyCheckpoint: state.count % 3 == 0,
+              historyCheckpoint: state.count % 3 == 2,
             })
           }
         >

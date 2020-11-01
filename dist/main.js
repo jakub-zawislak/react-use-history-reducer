@@ -116,8 +116,11 @@ var external_react_ = __webpack_require__(0);
 const UNDO = 'USE_HISTORY_REDUCER_UNDO';
 const REDO = 'USE_HISTORY_REDUCER_REDO';
 const compareStates = (stateA, stateB) => JSON.stringify(stateA) === JSON.stringify(stateB);
+const firstElementsOfArray = (array, n) => {
+    return typeof n === 'undefined' ? array : array.slice(0, n);
+};
 const useHistoryReducer = (reducer, initialState, opts = {}) => {
-    const { omitUnmodified, useCheckpoints } = Object.assign({ omitUnmodified: true, useCheckpoints: false }, opts);
+    const { omitUnmodified, useCheckpoints, max } = Object.assign({ omitUnmodified: true, useCheckpoints: false, max: undefined }, opts);
     const historyState = {
         past: [],
         present: initialState,
@@ -165,7 +168,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
             };
         }
         return {
-            past: [state.present, ...state.past],
+            past: firstElementsOfArray([state.present, ...state.past], max),
             present: newPresent,
             future: [],
             isCheckpoint: isNewCheckpoint,

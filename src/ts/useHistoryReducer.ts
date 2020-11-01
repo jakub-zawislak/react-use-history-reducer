@@ -34,19 +34,25 @@ type UseHistoryReducer = <T>(
 type Options = {
   omitUnmodified?: boolean
   useCheckpoints?: boolean
+  max?: number | undefined
 }
 
 const compareStates = (stateA: any, stateB: any) =>
   JSON.stringify(stateA) === JSON.stringify(stateB)
+
+const firstElementsOfArray = <T>(array: T[], n: number | undefined): T[] => {
+  return typeof n === 'undefined' ? array : array.slice(0, n)
+}
 
 const useHistoryReducer: UseHistoryReducer = (
   reducer,
   initialState,
   opts = {}
 ) => {
-  const { omitUnmodified, useCheckpoints }: Options = {
+  const { omitUnmodified, useCheckpoints, max }: Options = {
     omitUnmodified: true,
     useCheckpoints: false,
+    max: undefined,
     ...opts,
   }
 
@@ -108,7 +114,7 @@ const useHistoryReducer: UseHistoryReducer = (
     }
 
     return {
-      past: [state.present, ...state.past],
+      past: firstElementsOfArray([state.present, ...state.past], max),
       present: newPresent,
       future: [],
       isCheckpoint: isNewCheckpoint,
