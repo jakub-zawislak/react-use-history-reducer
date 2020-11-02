@@ -15,6 +15,7 @@ type HistoryState<State> = {
   future: State[]
   isCheckpoint: boolean
   undoRedoCounter: number
+  updateCounter: number
 }
 
 export type HistoryReducerControl<T> = {
@@ -25,6 +26,7 @@ export type HistoryReducerControl<T> = {
   past: T[]
   future: T[]
   undoRedoCounter: number
+  updateCounter: number
 }
 
 type UseHistoryReducer = <T>(
@@ -64,6 +66,7 @@ const useHistoryReducer: UseHistoryReducer = (
     future: [],
     isCheckpoint: true,
     undoRedoCounter: 0,
+    updateCounter: 0,
   }
 
   const historyReducer = (state, action: Action) => {
@@ -77,6 +80,7 @@ const useHistoryReducer: UseHistoryReducer = (
       }
 
       return {
+        ...state,
         past,
         present: newPresent,
         future: state.isCheckpoint
@@ -95,6 +99,7 @@ const useHistoryReducer: UseHistoryReducer = (
       }
 
       return {
+        ...state,
         past: state.isCheckpoint ? [state.present, ...state.past] : state.past,
         present: newPresent,
         future,
@@ -116,6 +121,7 @@ const useHistoryReducer: UseHistoryReducer = (
         present: newPresent,
         future: state.future,
         isCheckpoint: isNewCheckpoint,
+        updateCounter: state.updateCounter + 1,
       }
     }
 
@@ -125,12 +131,19 @@ const useHistoryReducer: UseHistoryReducer = (
       present: newPresent,
       future: [],
       isCheckpoint: isNewCheckpoint,
+      updateCounter: state.updateCounter + 1,
     }
   }
 
   const [state, dispatch] = useReducer(historyReducer, historyState)
 
-  const { past, future, present, undoRedoCounter } = state as HistoryState<any>
+  const {
+    past,
+    future,
+    present,
+    undoRedoCounter,
+    updateCounter,
+  } = state as HistoryState<any>
 
   const history = {
     canUndo: past.length > 0,
@@ -140,6 +153,7 @@ const useHistoryReducer: UseHistoryReducer = (
     past,
     future,
     undoRedoCounter,
+    updateCounter,
   }
 
   return [present, dispatch, history]

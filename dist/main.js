@@ -127,6 +127,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
         future: [],
         isCheckpoint: true,
         undoRedoCounter: 0,
+        updateCounter: 0,
     };
     const historyReducer = (state, action) => {
         const isNewCheckpoint = useCheckpoints ? !!action.historyCheckpoint : true;
@@ -135,40 +136,28 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
             if (!newPresent) {
                 return state;
             }
-            return {
-                past,
-                present: newPresent,
-                future: state.isCheckpoint
+            return Object.assign(Object.assign({}, state), { past, present: newPresent, future: state.isCheckpoint
                     ? [state.present, ...state.future]
-                    : state.future,
-                isCheckpoint: true,
-                undoRedoCounter: state.undoRedoCounter + 1,
-            };
+                    : state.future, isCheckpoint: true, undoRedoCounter: state.undoRedoCounter + 1 });
         }
         if (action.type === REDO) {
             const [newPresent, ...future] = state.future;
             if (!newPresent) {
                 return state;
             }
-            return {
-                past: state.isCheckpoint ? [state.present, ...state.past] : state.past,
-                present: newPresent,
-                future,
-                isCheckpoint: true,
-                undoRedoCounter: state.undoRedoCounter + 1,
-            };
+            return Object.assign(Object.assign({}, state), { past: state.isCheckpoint ? [state.present, ...state.past] : state.past, present: newPresent, future, isCheckpoint: true, undoRedoCounter: state.undoRedoCounter + 1 });
         }
         const newPresent = reducer(state.present, action);
         if (omitUnmodified && compareStates(newPresent, state.present)) {
             return state;
         }
         if (useCheckpoints && !state.isCheckpoint) {
-            return Object.assign(Object.assign({}, state), { past: state.past, present: newPresent, future: state.future, isCheckpoint: isNewCheckpoint });
+            return Object.assign(Object.assign({}, state), { past: state.past, present: newPresent, future: state.future, isCheckpoint: isNewCheckpoint, updateCounter: state.updateCounter + 1 });
         }
-        return Object.assign(Object.assign({}, state), { past: firstElementsOfArray([state.present, ...state.past], max), present: newPresent, future: [], isCheckpoint: isNewCheckpoint });
+        return Object.assign(Object.assign({}, state), { past: firstElementsOfArray([state.present, ...state.past], max), present: newPresent, future: [], isCheckpoint: isNewCheckpoint, updateCounter: state.updateCounter + 1 });
     };
     const [state, dispatch] = Object(external_react_["useReducer"])(historyReducer, historyState);
-    const { past, future, present, undoRedoCounter } = state;
+    const { past, future, present, undoRedoCounter, updateCounter, } = state;
     const history = {
         canUndo: past.length > 0,
         canRedo: future.length > 0,
@@ -177,6 +166,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
         past,
         future,
         undoRedoCounter,
+        updateCounter,
     };
     return [present, dispatch, history];
 };

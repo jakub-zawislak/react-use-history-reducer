@@ -146,6 +146,7 @@ export const Counter = () => {
     <div>
       <div>Count: {state.count}</div>
       <div>Undo / Redo counter: {history.undoRedoCounter}</div>
+      <div>Update counter: {history.updateCounter}</div>
       <br />
       <div>
         <button onClick={() => dispatch({ type: 'decrement' })}>--</button>{' '}

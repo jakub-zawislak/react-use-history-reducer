@@ -13,6 +13,7 @@ export declare type HistoryReducerControl<T> = {
     past: T[];
     future: T[];
     undoRedoCounter: number;
+    updateCounter: number;
 };
 declare type UseHistoryReducer = <T>(reducer: Reducer<T>, initialState: T, opts?: Partial<Options>) => [T, React.Dispatch<Action>, HistoryReducerControl<T>];
 declare type Options = {
