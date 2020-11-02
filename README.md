@@ -79,14 +79,15 @@ const [state, dispatch, history] = useHistoryReducer(reducer, initialState)
 
 It has these properties:
 
-| Property | Type     | Description           |
-|----------|----------|-----------------------|
-| undo     | function | Call it to undo       |
-| redo     | function | Call it to redo       |
-| canUndo  | boolean  | Check if you can undo |
-| canRedo  | boolean  | Check if you can redo |
-| past     | state[]  | Past states           |
-| future   | state[]  | Future states         |
+| Property        | Type     | Description                                                                                          |
+|-----------------|----------|------------------------------------------------------------------------------------------------------|
+| undo            | function | Call it to undo                                                                                      |
+| redo            | function | Call it to redo                                                                                      |
+| canUndo         | boolean  | Check if you can undo                                                                                |
+| canRedo         | boolean  | Check if you can redo                                                                                |
+| past            | state[]  | Past states                                                                                          |
+| future          | state[]  | Future states                                                                                        |
+| undoRedoCounter | number   | Number of undo and redo actions. Can be used if we want to reload some component on undo/redo click  |
 
 ## Development
 

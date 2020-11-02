@@ -136,3 +136,30 @@ export const Breakpoints = () => {
     </div>
   )
 }
+
+export const Counter = () => {
+  const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
+    omitUnmodified: true,
+  })
+
+  return (
+    <div>
+      <div>Count: {state.count}</div>
+      <div>Undo / Redo counter: {history.undoRedoCounter}</div>
+      <br />
+      <div>
+        <button onClick={() => dispatch({ type: 'decrement' })}>--</button>{' '}
+        <button onClick={() => dispatch({ type: 'increment' })}>++</button>
+      </div>
+      <br />
+      <div>
+        <button disabled={!history.canUndo} onClick={history.undo}>
+          undo
+        </button>{' '}
+        <button disabled={!history.canRedo} onClick={history.redo}>
+          redo
+        </button>
+      </div>
+    </div>
+  )
+}
