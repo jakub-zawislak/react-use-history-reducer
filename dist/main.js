@@ -126,6 +126,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
         present: initialState,
         future: [],
         isCheckpoint: true,
+        undoRedoCounter: 0,
     };
     const historyReducer = (state, action) => {
         const isNewCheckpoint = useCheckpoints ? !!action.historyCheckpoint : true;
@@ -141,6 +142,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
                     ? [state.present, ...state.future]
                     : state.future,
                 isCheckpoint: true,
+                undoRedoCounter: state.undoRedoCounter + 1,
             };
         }
         if (action.type === REDO) {
@@ -153,6 +155,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
                 present: newPresent,
                 future,
                 isCheckpoint: true,
+                undoRedoCounter: state.undoRedoCounter + 1,
             };
         }
         const newPresent = reducer(state.present, action);
@@ -160,22 +163,12 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
             return state;
         }
         if (useCheckpoints && !state.isCheckpoint) {
-            return {
-                past: state.past,
-                present: newPresent,
-                future: state.future,
-                isCheckpoint: isNewCheckpoint,
-            };
+            return Object.assign(Object.assign({}, state), { past: state.past, present: newPresent, future: state.future, isCheckpoint: isNewCheckpoint });
         }
-        return {
-            past: firstElementsOfArray([state.present, ...state.past], max),
-            present: newPresent,
-            future: [],
-            isCheckpoint: isNewCheckpoint,
-        };
+        return Object.assign(Object.assign({}, state), { past: firstElementsOfArray([state.present, ...state.past], max), present: newPresent, future: [], isCheckpoint: isNewCheckpoint });
     };
     const [state, dispatch] = Object(external_react_["useReducer"])(historyReducer, historyState);
-    const { past, future, present } = state;
+    const { past, future, present, undoRedoCounter } = state;
     const history = {
         canUndo: past.length > 0,
         canRedo: future.length > 0,
@@ -183,6 +176,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
         redo: () => dispatch({ type: REDO }),
         past,
         future,
+        undoRedoCounter,
     };
     return [present, dispatch, history];
 };
