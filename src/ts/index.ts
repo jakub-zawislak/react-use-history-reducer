@@ -1,5 +1,8 @@
-import useHistoryReducer, { HistoryReducerControl } from './useHistoryReducer'
+import useHistoryReducer, {
+  HistoryReducerControl,
+  HistoryState,
+} from './useHistoryReducer'
 
 export default useHistoryReducer
 
-export { HistoryReducerControl }
+export { HistoryReducerControl, HistoryState }

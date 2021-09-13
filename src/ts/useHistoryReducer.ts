@@ -4,12 +4,14 @@ const UNDO = 'USE_HISTORY_REDUCER_UNDO'
 const REDO = 'USE_HISTORY_REDUCER_REDO'
 
 type Reducer<T> = (state: T, action: Action) => T
+
 type Action = {
   [key: string]: any
   historyCheckpoint?: boolean
   type: string
 }
-type HistoryState<State> = {
+
+export type HistoryState<State> = {
   past: State[]
   present: State
   future: State[]
