@@ -5,7 +5,7 @@ declare type Action = {
     historyCheckpoint?: boolean;
     type: string;
 };
-declare type HistoryState<State> = {
+export declare type HistoryState<State> = {
     past: State[];
     present: State;
     future: State[];
