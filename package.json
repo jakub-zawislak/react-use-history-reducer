@@ -1,6 +1,6 @@
 {
   "name": "react-use-history-reducer",
-  "version": "0.1.13",
+  "version": "0.1.16",
   "description": "",
   "main": "dist/main.js",
   "types": "dist/src/ts/index.d.ts",

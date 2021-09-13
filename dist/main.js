@@ -120,15 +120,14 @@ const firstElementsOfArray = (array, n) => {
     return typeof n === 'undefined' ? array : array.slice(0, n);
 };
 const useHistoryReducer = (reducer, initialState, opts = {}) => {
-    const { omitUnmodified, useCheckpoints, max } = Object.assign({ omitUnmodified: true, useCheckpoints: false, max: undefined }, opts);
-    const historyState = {
-        past: [],
-        present: initialState,
-        future: [],
-        isCheckpoint: true,
-        undoRedoCounter: 0,
-        updateCounter: 0,
-    };
+    const { omitUnmodified, useCheckpoints, max, initialHistoryState, } = Object.assign({ omitUnmodified: true, useCheckpoints: false, max: undefined, initialHistoryState: {
+            past: [],
+            present: initialState,
+            future: [],
+            isCheckpoint: true,
+            undoRedoCounter: 0,
+            updateCounter: 0,
+        } }, opts);
     const historyReducer = (state, action) => {
         const isNewCheckpoint = useCheckpoints ? !!action.historyCheckpoint : true;
         if (action.type === UNDO) {
@@ -156,7 +155,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
         }
         return Object.assign(Object.assign({}, state), { past: firstElementsOfArray([state.present, ...state.past], max), present: newPresent, future: [], isCheckpoint: isNewCheckpoint, updateCounter: state.updateCounter + 1 });
     };
-    const [state, dispatch] = Object(external_react_["useReducer"])(historyReducer, historyState);
+    const [state, dispatch] = Object(external_react_["useReducer"])(historyReducer, initialHistoryState);
     const { past, future, present, undoRedoCounter, updateCounter, } = state;
     const history = {
         canUndo: past.length > 0,
@@ -168,7 +167,7 @@ const useHistoryReducer = (reducer, initialState, opts = {}) => {
         undoRedoCounter,
         updateCounter,
     };
-    return [present, dispatch, history];
+    return [present, dispatch, history, state];
 };
 /* harmony default export */ var ts_useHistoryReducer = (useHistoryReducer);
 

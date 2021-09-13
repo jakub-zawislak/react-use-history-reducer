@@ -32,13 +32,14 @@ export type HistoryReducerControl<T> = {
 type UseHistoryReducer = <T>(
   reducer: Reducer<T>,
   initialState: T,
-  opts?: Partial<Options>
-) => [T, React.Dispatch<Action>, HistoryReducerControl<T>]
+  opts?: Partial<Options<T>>
+) => [T, React.Dispatch<Action>, HistoryReducerControl<T>, HistoryState<T>]
 
-type Options = {
+type Options<T> = {
   omitUnmodified?: boolean
   useCheckpoints?: boolean
   max?: number | undefined
+  initialHistoryState?: HistoryState<T>
 }
 
 const compareStates = (stateA: any, stateB: any) =>
@@ -53,20 +54,24 @@ const useHistoryReducer: UseHistoryReducer = (
   initialState,
   opts = {}
 ) => {
-  const { omitUnmodified, useCheckpoints, max }: Options = {
+  const {
+    omitUnmodified,
+    useCheckpoints,
+    max,
+    initialHistoryState,
+  }: Options<any> = {
     omitUnmodified: true,
     useCheckpoints: false,
     max: undefined,
+    initialHistoryState: {
+      past: [],
+      present: initialState,
+      future: [],
+      isCheckpoint: true,
+      undoRedoCounter: 0,
+      updateCounter: 0,
+    },
     ...opts,
-  }
-
-  const historyState: HistoryState<any> = {
-    past: [],
-    present: initialState,
-    future: [],
-    isCheckpoint: true,
-    undoRedoCounter: 0,
-    updateCounter: 0,
   }
 
   const historyReducer = (state, action: Action) => {
@@ -135,7 +140,7 @@ const useHistoryReducer: UseHistoryReducer = (
     }
   }
 
-  const [state, dispatch] = useReducer(historyReducer, historyState)
+  const [state, dispatch] = useReducer(historyReducer, initialHistoryState)
 
   const {
     past,
@@ -156,7 +161,7 @@ const useHistoryReducer: UseHistoryReducer = (
     updateCounter,
   }
 
-  return [present, dispatch, history]
+  return [present, dispatch, history, state]
 }
 
 export default useHistoryReducer

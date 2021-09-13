@@ -57,17 +57,27 @@ export const MyComponent = () => {
 You can pass options in a third argument
 
 ```jsx
-const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
-  omitUnmodified: true,
-  useCheckpoints: false,
-})
+const [state, dispatch, history, currentHistoryState] = useHistoryReducer(
+  reducer,
+  initialState,
+  {
+    omitUnmodified: true,
+    useCheckpoints: false,
+    max: 5,
+    initialHistoryState: initialHistoryState,
+  }
+)
 ```
 
-| Option         | Type    | Default   | Description                                                                                                                                 |
-|----------------|---------|-----------|---------------------------------------------------------------------------------------------------------------------------------------------|
-| omitUnmodified | boolean | true      | If it's true, it doesn't push a new state to the history, if it's the same as a previous one. It compares states using the `JSON.stringify` |
-| useCheckpoints | boolean | false     | Enables checkpoints support. With this option you have to pass `historyCheckpoint: true` to the action to add state to history              |
-| max            | number  | undefined | Max items length of history                                                                                                                 |
+You can save the `currentHistoryState` on component unmount and use it later as
+the `initialHistoryState` option.
+
+| Option              | Type                  | Default     | Description                                                                                                                                                                                       |
+|---------------------|-----------------------|-------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| omitUnmodified      | boolean               | true        | If it's true, it doesn't push a new state to the history, if it's the same as a previous one. It compares states using the `JSON.stringify`                                                       |
+| useCheckpoints      | boolean               | false       | Enables checkpoints support. With this option you have to pass `historyCheckpoint: true` to the action to add state to history                                                                    |
+| max                 | number                | undefined   | Max items length of history                                                                                                                                                                       |
+| initialHistoryState | HistoryReducerControl | empty state | You can pass here your own initial history state. The current state is available in forth argument returned by `useHistoryReducer`. It's useful on re-mounting component with `useHistoryReducer` |
 
 ## The `history` object
 
@@ -79,15 +89,15 @@ const [state, dispatch, history] = useHistoryReducer(reducer, initialState)
 
 It has these properties:
 
-| Property        | Type     | Description                                                                                          |
-|-----------------|----------|------------------------------------------------------------------------------------------------------|
-| undo            | function | Call it to undo                                                                                      |
-| redo            | function | Call it to redo                                                                                      |
-| canUndo         | boolean  | Check if you can undo                                                                                |
-| canRedo         | boolean  | Check if you can redo                                                                                |
-| past            | state[]  | Past states                                                                                          |
-| future          | state[]  | Future states                                                                                        |
-| undoRedoCounter | number   | Number of undo and redo actions. Can be used if we want to reload some component on undo/redo click  |
+| Property        | Type     | Description                                                                                         |
+|-----------------|----------|-----------------------------------------------------------------------------------------------------|
+| undo            | function | Call it to undo                                                                                     |
+| redo            | function | Call it to redo                                                                                     |
+| canUndo         | boolean  | Check if you can undo                                                                               |
+| canRedo         | boolean  | Check if you can redo                                                                               |
+| past            | state[]  | Past states                                                                                         |
+| future          | state[]  | Future states                                                                                       |
+| undoRedoCounter | number   | Number of undo and redo actions. Can be used if we want to reload some component on undo/redo click |
 
 ## Development
 

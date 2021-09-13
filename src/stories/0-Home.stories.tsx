@@ -61,6 +61,42 @@ export const Basic = () => {
   )
 }
 
+export const InitialHistoryStory = () => {
+  const initialHistoryState = {
+    past: [{ count: 1 }, { count: 0 }],
+    present: { count: 2 },
+    future: [],
+    isCheckpoint: true,
+    undoRedoCounter: 0,
+    updateCounter: 2,
+  }
+
+  const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
+    omitUnmodified: true,
+    initialHistoryState,
+  })
+
+  return (
+    <div>
+      <div>Count: {state.count}</div>
+      <br />
+      <div>
+        <button onClick={() => dispatch({ type: 'decrement' })}>--</button>{' '}
+        <button onClick={() => dispatch({ type: 'increment' })}>++</button>
+      </div>
+      <br />
+      <div>
+        <button disabled={!history.canUndo} onClick={history.undo}>
+          undo
+        </button>{' '}
+        <button disabled={!history.canRedo} onClick={history.redo}>
+          redo
+        </button>
+      </div>
+    </div>
+  )
+}
+
 export const MaxLength = () => {
   const [state, dispatch, history] = useHistoryReducer(reducer, initialState, {
     omitUnmodified: true,

@@ -5,6 +5,14 @@ declare type Action = {
     historyCheckpoint?: boolean;
     type: string;
 };
+declare type HistoryState<State> = {
+    past: State[];
+    present: State;
+    future: State[];
+    isCheckpoint: boolean;
+    undoRedoCounter: number;
+    updateCounter: number;
+};
 export declare type HistoryReducerControl<T> = {
     canUndo: boolean;
     canRedo: boolean;
@@ -15,11 +23,12 @@ export declare type HistoryReducerControl<T> = {
     undoRedoCounter: number;
     updateCounter: number;
 };
-declare type UseHistoryReducer = <T>(reducer: Reducer<T>, initialState: T, opts?: Partial<Options>) => [T, React.Dispatch<Action>, HistoryReducerControl<T>];
-declare type Options = {
+declare type UseHistoryReducer = <T>(reducer: Reducer<T>, initialState: T, opts?: Partial<Options<T>>) => [T, React.Dispatch<Action>, HistoryReducerControl<T>, HistoryState<T>];
+declare type Options<T> = {
     omitUnmodified?: boolean;
     useCheckpoints?: boolean;
     max?: number | undefined;
+    initialHistoryState?: HistoryState<T>;
 };
 declare const useHistoryReducer: UseHistoryReducer;
 export default useHistoryReducer;
